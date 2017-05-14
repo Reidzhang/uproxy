@@ -2,7 +2,7 @@
  * Chrome oauth provider
  **/
 
-import * as uproxy_core_api from '../../../interfaces/uproxy_core_api';
+import * as uproxy_core_api from '../../interfaces/uproxy_core_api';
 import ChromeUIConnector from './chrome_ui_connector';
 
 export default class Chrome_oauth {

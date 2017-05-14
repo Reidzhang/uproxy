@@ -10,12 +10,12 @@ var installedFreedomHooks :number[] = [];
 
 export default class ChromeUIConnector {
 
-  private extPort_:chrome.runtime.Port;    // The port that the extension connects to.
+  // private extPort_:chrome.runtime.Port;    // The port that the extension connects to.
   private onCredentials_ :(credentials?:Object, error?:Object) => void;
   private INSTALL_INCOMPLETE_PAGE_ :string = '../install-incomplete.html';
 
   constructor(private uProxyAppChannel_ :freedom.OnAndEmit<any,any>) {
-    this.extPort_ = null;
+    // this.extPort_ = null;
     (<chrome.runtime.ExtensionConnectEvent>chrome.runtime.onConnectExternal).addListener(this.onConnect_);
     // Until the extension is connected, we assume uProxy installation is
     // incomplete.
@@ -27,29 +27,14 @@ export default class ChromeUIConnector {
     });
   }
 
-  // Launch a popup instructing the user to install the extension.
-  private launchInstallIncompletePage_ = () => {
-    var installIncompletePopup = chrome.app.window.get('install-incomplete');
-    if (!installIncompletePopup) {
-      chrome.app.window.create(this.INSTALL_INCOMPLETE_PAGE_,
-          { id: 'install-extension',
-            innerBounds: {
-            height: 600,
-            width: 371
-          }});
-    } else {
-      installIncompletePopup.focus();
-    }
-  }
-
   // If we are connected to the extension, launch uproxy.
-  private launchUproxy_ = () => {
-    this.extPort_.postMessage({
-        cmd: 'fired',
-        type: uproxy_core_api.Update.LAUNCH_UPROXY,
-        data: ''
-    });
-  }
+  // private launchUproxy_ = () => {
+  //   this.extPort_.postMessage({
+  //       cmd: 'fired',
+  //       type: uproxy_core_api.Update.LAUNCH_UPROXY,
+  //       data: ''
+  //   });
+  // }
 
   // Handler for when the uProxy Chrome Extension connects to this uProxy App.
   private onConnect_ = (port :chrome.runtime.Port) => {
@@ -63,13 +48,13 @@ export default class ChromeUIConnector {
       return;
     }
     console.log('Connected to extension ' + UPROXY_CHROME_EXTENSION_ID);
-    this.extPort_ = port;  // Update to the current port.
+    // this.extPort_ = port;  // Update to the current port.
 
     // Because there is no callback when you call runtime.connect and it
     // sucessfully connects, the extension depends on a message received from
     // this app, so it knows the connection was successful.
-    this.extPort_.postMessage(uproxy_chrome.ChromeMessage.ACK);
-    this.extPort_.onMessage.addListener(this.onExtMsg_);
+    // this.extPort_.postMessage(uproxy_chrome.ChromeMessage.ACK);
+    // this.extPort_.onMessage.addListener(this.onExtMsg_);
 
     // Once the extension is connected, we know that installation of uProxy
     // is complete.
@@ -119,17 +104,17 @@ export default class ChromeUIConnector {
                                 {data: data, promiseId: promiseId});
   }
 
-  public sendToUI = (type :uproxy_core_api.Update, data?:Object) => {
-    if (!this.extPort_) {
-      console.error('Trying to send a message without the UI being connected');
-      return;
-    }
+  // public sendToUI = (type :uproxy_core_api.Update, data?:Object) => {
+  //   if (!this.extPort_) {
+  //     console.error('Trying to send a message without the UI being connected');
+  //     return;
+  //   }
 
-    this.extPort_.postMessage({
-        cmd: 'fired',
-        type: type,
-        data: data
-    });
+    // this.extPort_.postMessage({
+    //     cmd: 'fired',
+    //     type: type,
+    //     data: data
+    // });
   }
 
   public setOnCredentials = (onCredentials:(credentials:Object) => void) => {
