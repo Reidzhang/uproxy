@@ -1,3 +1,4 @@
+// this is for electron, in case electron chrome doesn't work
 {
   "name": "electron-uproxyt",
   "version": "1.0.0",
