@@ -3,11 +3,11 @@
  **/
 
 import * as uproxy_core_api from '../../interfaces/uproxy_core_api';
-import ChromeUIConnector from './chrome_ui_connector';
+import ChromeConnector from './chrome_core_connector';
 // TODO: change it to electron specifc and applying freedom-node module
 export default class Chrome_oauth {
   // I don't think I still need this ChromeUIConnector
-  constructor(private options_:{connector:ChromeUIConnector;}) {}
+  constructor(private options_:{connector:ChromeConnector;}) {}
 
   public initiateOAuth(
       redirectURIs:{[urls:string]:string},

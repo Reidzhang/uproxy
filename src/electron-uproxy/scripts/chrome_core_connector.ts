@@ -129,10 +129,10 @@ export default class ChromeCoreConnector implements browser_connector.CoreBrowse
     } else if (payload.type == uproxy_core_api.Command.CREDENTIALS_ERROR) {
       this.onCredentials_(undefined, payload.data);
     }
-    this.sendToCore_(payload.type, payload.data, payload.promiseId);
+    this.sendToCore(payload.type, payload.data, payload.promiseId);
   }
 
-  private sendToCore_ = (msgType :uproxy_core_api.Command, data :Object,
+  public sendToCore = (msgType :uproxy_core_api.Command, data :Object,
                        promiseId :Number = 0) => {
     this.uProxyAppChannel_.emit(msgType.toString(),
                                 {data: data, promiseId: promiseId});
