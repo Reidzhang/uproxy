@@ -21,6 +21,7 @@
 .tscache
 .vscode
 build
+!build/src/nwjs
 node_modules
 npm-debug.log
 keys
