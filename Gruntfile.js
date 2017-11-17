@@ -34,6 +34,7 @@ module.exports = function(grunt) {
   const ccaDevPath = path.join(devBuildPath, 'cca/');
   const androidDevPath = path.join(devBuildPath, 'android/');
   const genericPath = path.join(devBuildPath, 'generic/');
+  const nwjsDevPath = path.join(devBuildPath, 'nwjs/');
 
 //-------------------------------------------------------------------------
   function browserifyIntegrationTest(path) {
@@ -574,6 +575,9 @@ module.exports = function(grunt) {
           moz: true
         },
         src: ['src/firefox/lib/*.js']
+      },
+      nwjs: {
+        src: ['src/nwjs/*.js']
       }
     },
     watch: {
@@ -725,6 +729,7 @@ module.exports = function(grunt) {
     'build_chrome',
     'build_firefox',
     'build_cca',
+    'build_nwjs',
     'jshint',
     'copy:dist',
     'exec:xpi',
@@ -1099,6 +1104,19 @@ module.exports = function(grunt) {
     },
   });
 
+  // =========================================================================
+  // NWJS
+  // =========================================================================
+  registerTask(grunt, 'build_nwjs', [
+    'copy:resources',
+    'copy:devGenericCore',
+    'compileTypescript',
+    'browserify:genericCoreFreedomModule',
+    'browserify:loggingProvider',
+    'browserify:churnPipeFreedomModule',
+    'browserify:cloudSocialProviderFreedomModule'
+  ]);
+  
   // =========================================================================
   // Android
   // =========================================================================
