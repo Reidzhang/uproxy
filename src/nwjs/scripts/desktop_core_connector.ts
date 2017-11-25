@@ -9,7 +9,7 @@
 import * as browser_connector from '../../interfaces/browser_connector';
 import * as uproxy_core_api from '../../interfaces/uproxy_core_api';
 
-// import CoreConnector from '../../generic_ui/scripts/core_connector';
+import CoreConnector from '../../generic_ui/scripts/core_connector';
 
 declare const freedom: freedom.FreedomInCoreEnv;
 
@@ -31,101 +31,102 @@ var uProxyAppChannelPromise = freedom(
   return uProxyModuleFactory();
 });
 
-// export function makeCoreConnector() : Promise<CoreConnector> {
-//   return uProxyAppChannelPromise.then((channel) => {
-//     const browserConnector = new CordovaCoreConnector(channel, {
-//       name: 'uproxy-ui-to-core-connector'
-//     });
-//     const core = new CoreConnector(browserConnector);
-//     return core.login({
-//       network: 'Cloud',
-//       loginType: uproxy_core_api.LoginType.INITIAL,
-//     }).then((loginResult) => {
-//       console.debug(`Logged in to Cloud network. userId: ${loginResult.userId}, instanceId: ${loginResult.instanceId}`);
-//       return core;
-//     });
-//   });
-// }
+export function makeCoreConnector() : Promise<CoreConnector> {
+  return uProxyAppChannelPromise.then((channel) => {
+    // const browserConnector = new CordovaCoreConnector(channel, {
+    //   name: 'uproxy-ui-to-core-connector'
+    // });
+    // const core = new CoreConnector(browserConnector);
+    return core.login({
+      network: 'Cloud',
+      loginType: uproxy_core_api.LoginType.INITIAL,
+    }).then((loginResult) => {
+      console.debug(`Logged in to Cloud network. userId: ${loginResult.userId}, instanceId: ${loginResult.instanceId}`);
+      return core;
+    });
+  });
+}
 
-// class DesktopCoreConnector implements browser_connector.CoreBrowserConnector {
-//   // Status object indicating whether we're connected to the app.
-//   public status :browser_connector.StatusObject;
+// UI should talk to core via DesktopCoreConnector, which wraps the uProxy.core
+class DesktopCoreConnector implements browser_connector.CoreBrowserConnector {
+  // Status object indicating whether we're connected to the app.
+  public status :browser_connector.StatusObject;
 
-//   private fulfillConnect :Function;
-//   public onceConnected :Promise<void> = new Promise<void>((F, R) => {
-//     this.fulfillConnect = F;
-//   });
+  private fulfillConnect :Function;
+  public onceConnected :Promise<void> = new Promise<void>((F, R) => {
+    this.fulfillConnect = F;
+  });
 
-//   constructor(private appChannel: freedom.OnAndEmit<any,any>,
-//       private options ?:chrome.runtime.ConnectInfo) {
-//     this.status = { connected: false };
-//   }
+  constructor(private appChannel: freedom.OnAndEmit<any,any>,
+      private options ?:chrome.runtime.ConnectInfo) {
+    this.status = { connected: false };
+  }
 
 
-//   // --- Connectivity methods ---
+  // --- Connectivity methods ---
 
-//   /**
-//    * Connect the UI to the Freedom module.
-//    *
-//    * Returns a promise fulfilled upon connection.
-//    */
-//   public connect = () : Promise<void> => {
-//     console.log('DesktopCoreConnector.connect()');
-//     if (!this.status.connected) {
-//       this.fulfillConnect();
-//       this.emit('core_connect');
-//       this.status.connected = true;
-//     }
-//     return Promise.resolve();
-//   }
+  /**
+   * Connect the UI to the Freedom module.
+   *
+   * Returns a promise fulfilled upon connection.
+   */
+  public connect = () : Promise<void> => {
+    console.log('DesktopCoreConnector.connect()');
+    if (!this.status.connected) {
+      this.fulfillConnect();
+      this.emit('core_connect');
+      this.status.connected = true;
+    }
+    return Promise.resolve();
+  }
 
-//   // --- Communication ---
-//   /**
-//    * Attach handlers for updates emitted from the uProxy Core.
-//    */
-//   public onUpdate = (update :uproxy_core_api.Update,
-//       handler :(eventData:any) => void) => {
-//     this.onceConnected.then(() => {
-//       var type = '' + update;
-//       this.appChannel.on(type, handler);
-//     });
-//   }
+  // --- Communication ---
+  /**
+   * Attach handlers for updates emitted from the uProxy Core.
+   */
+  public onUpdate = (update :uproxy_core_api.Update,
+      handler :(eventData:any) => void) => {
+    this.onceConnected.then(() => {
+      var type = '' + update;
+      this.appChannel.on(type, handler);
+    });
+  }
 
-//   /**
-//    * Send a payload to the Chrome app.  Only "emit" messages are allowed.
-//    * If currently connected to the App, immediately send. Otherwise, queue
-//    * the message until connection completes.
-//    * If skipQueue==true, payloads will not be enqueued disconnected.
-//    */
-//   public send = (payload :browser_connector.Payload,
-//                  skipQueue :Boolean = false) => {
-//     if (payload.cmd !== 'emit') {
-//        throw new Error('send can only be used for emit');
-//     }
-//     if (skipQueue) {
-//       return;
-//     }
-//     this.onceConnected.then(() => {
-//       this.appChannel.emit('' + payload.type,
-//           {data: payload.data, promiseId: payload.promiseId});
-//     });
-//   }
+  /**
+   * Send a payload to the Chrome app.  Only "emit" messages are allowed.
+   * If currently connected to the App, immediately send. Otherwise, queue
+   * the message until connection completes.
+   * If skipQueue==true, payloads will not be enqueued disconnected.
+   */
+  public send = (payload :browser_connector.Payload,
+                 skipQueue :Boolean = false) => {
+    if (payload.cmd !== 'emit') {
+       throw new Error('send can only be used for emit');
+    }
+    if (skipQueue) {
+      return;
+    }
+    this.onceConnected.then(() => {
+      this.appChannel.emit('' + payload.type,
+          {data: payload.data, promiseId: payload.promiseId});
+    });
+  }
 
-//   public flushQueue = () => {
-//   }
+  public flushQueue = () => {
+  }
 
-//   public restart() {
-//   }
+  public restart() {
+  }
 
-//   private events :{[name :string] :Function} = {};
+  private events :{[name :string] :Function} = {};
 
-//   public on = (name :string, callback :Function) => {
-//     this.events[name] = callback;
-//   }
+  public on = (name :string, callback :Function) => {
+    this.events[name] = callback;
+  }
 
-//   private emit = (name :string, ...args :Object[]) => {
-//     if (name in this.events) {
-//       this.events[name].apply(null, args);
-//     }
-//   }
-// }  // class DesktopCoreConnector
+  private emit = (name :string, ...args :Object[]) => {
+    if (name in this.events) {
+      this.events[name].apply(null, args);
+    }
+  }
+}  // class DesktopCoreConnector
