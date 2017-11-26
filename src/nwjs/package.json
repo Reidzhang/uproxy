@@ -1,20 +1,28 @@
-// this is for electron, in case electron chrome doesn't work
 {
-  "name": "electron-uproxyt",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron ." // TODO: Need to change this
+  "name": "uproxy_desktop",
+  "version": "1.0",
+  "chromium-args": "--mixed-context",
+  "main": "/generic_ui/index.html",
+  "bg-script": "main.js",
+  "window": {
+    "show": true
   },
-  "repository": "https://github.com/electron/electron-quick-start",
-  "keywords": [
-    "Electron",
-    "uProxy"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
-  "devDependencies": {
-    "electron": "~1.6.2"
+  "scripts": {
+    "start": "nw ."
+  },
+  "engines": {
+    "node": "*"
+  },
+  "dependencies": {
+    "freedom": "^0.6.36",
+    "freedom-for-chrome": "^0.4.28",
+    "freedom-pgp-e2e": "^0.6.2",
+    "freedom-port-control": "^0.9.0",
+    "freedom-social-firebase": "^2.0.0",
+    "freedom-social-github": "^0.1.3",
+    "freedom-social-quiver": "^0.1.5",
+    "freedom-social-wechat": "^0.1.5",
+    "freedom-xhr": "^0.0.11",
+    "freedomjs-anonymized-metrics": "^0.7.4"
   }
 }
