@@ -1,5 +1,6 @@
 
 /**
+ * TODO: modify according to cca implementation
  * desktop_core_connector.ts
  *
  * Runs in the UI context, proxying on() and emit() calls to the Freedom app in the
