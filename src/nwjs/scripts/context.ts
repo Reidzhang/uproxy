@@ -6,10 +6,18 @@ import * as user_interface from '../../generic_ui/scripts/ui';
 import CoreConnector from '../../generic_ui/scripts/core_connector';
 import * as same_context_panel_connector from '../../generic_ui/scripts/same_context_panel_connector';
 import { SameContextPanelConnector } from '../../generic_ui/scripts/same_context_panel_connector';
-// TODO desktop core connector
+import { DesktopCoreConnector} from './desktop_core_connector';
 
+export var browserConnector : DesktopCoreConnector = new DesktopCoreConnector({
+    name: 'uproxy-ui-to-core-connector'
+})
+export var core = new CoreConnector(browserConnector);
 export var ui : user_interface.UserInterface;
 export var model : ui_model.Model;
-var background_context : any = (<any>chrome.extension.getBackgroundPage()).ui_context;
 
-export var PanelConnector : SameContextPanelConnector = new same_context_panel_connector.SameContextPanelConnector();
+export var panelConnector : SameContextPanelConnector = new same_context_panel_connector.SameContextPanelConnector();
+var backgroundUi = new background_ui.BackgroundUi(panelConnector, core);
+
+var ui_context : any = (<any>chrome.extension.getBackgroundPage()).ui_context;
+ui = new user_interface.UserInterface(core, ui_context.browserApi, backgroundUi);
+model = ui.model;

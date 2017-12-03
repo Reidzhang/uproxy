@@ -118,3 +118,5 @@ class DesktopCoreConnector implements browser_connector.CoreBrowserConnector {
       }
     }
 }  // class DesktopCoreConnector
+
+export { DesktopCoreConnector };
