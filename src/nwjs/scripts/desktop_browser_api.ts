@@ -8,6 +8,10 @@ import * as Constants from '../../generic_ui/scripts/constants';
  *
  * Implementation of the Browser API.
  * Derived from chrome_browser_api.ts
+ * How to get teh main window in nwjs.
+ * global.__nw_windows[Object.keys(global.__nw_windows)][0].window
+ * tested in background page devtool.
+ * Please work in node context ...
  */
 
 enum PopupState {
@@ -21,8 +25,9 @@ export default class DesktopBrowserApi implements BrowserAPI {
     public canProxy = true;
 
     public hasInstalledThenLoggedIn = true;
-    // 
+    //  
     public supportsVpn = false;
 
     // TODO: set the system VPN using the script generated before.
+
 }
