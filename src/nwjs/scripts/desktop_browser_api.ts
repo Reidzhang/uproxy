@@ -46,6 +46,10 @@ export default class DesktopBrowserApi implements BrowserAPI {
 
     constructor() {
         // TODO: add Notification
+        chrome.notifications.onClicked.addListener((tag) => {
+            this.emit_('notificationclicked', tag);
+        });
+
     }
     
     public setIcon = (iconFile :string) : void => {
@@ -73,11 +77,22 @@ export default class DesktopBrowserApi implements BrowserAPI {
     }
 
     public showNotification = (text :string, tag :string) => {
+        var notification = new Notification('uProxy', {
+        body: text,
+        icon: 'icons/38_' + Constants.DEFAULT_ICON,
+        tag: tag});
 
+        notification.onclick = () => {
+            this.emit_('notificationClicked', tag);
+            };
+            setTimeout(function() {
+            notification.close();
+        }, 5000);
     }
-
+    
     public setBadgeNotification = (notification :string) => {
-        chrome.browserAction.setBadgeText({text: notification});
+        // chrome.browserAction.setBadgeText({text: notification});
+        // TODO : not sure how to handle this for the moment
     }
     
     private events_ :{[name :string] :Function} = {};

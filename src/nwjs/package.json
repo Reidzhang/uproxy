@@ -1,7 +1,7 @@
 {
   "name": "uproxy_desktop",
   "version": "1.0",
-  "chromium-args": "--mixed-context",
+  "chromium-args": "--enable-features=NativeNotifications",
   "main": "/generic_ui/index.html",
   "bg-script": "main.js",
   "window": {
