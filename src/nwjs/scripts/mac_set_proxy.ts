@@ -13,7 +13,7 @@ export function startSettingProcess(port: number, args: any) {
 
 export function stopProxy() {
     let proxyConfHelperPath = getBinaryPath('proxy_conf_helper');  
-    const proxyConfHelperProcess = spawn(proxyConfHelperPath, ['-m', 'off', '--port', '8080']);
+    const proxyConfHelperProcess = spawn(proxyConfHelperPath, ['-m', 'off']);
 }
 
 function spawnChildProcessWithTrace(fileName: string, args: string[]) {
