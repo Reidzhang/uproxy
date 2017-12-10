@@ -1,3 +1,5 @@
+/// <reference path= '../../../third_party/nwjs/index.d.ts' />
+
 import * as browser_api from "../../interfaces/browser_api";
 import BrowserAPI = browser_api.BrowserAPI;
 import * as net from '../../lib/net/net.types';
@@ -5,6 +7,7 @@ import * as Constants from '../../generic_ui/scripts/constants';
 import * as MacProxy from './mac_set_proxy';
 import ProxyAccessMode = browser_api.ProxyAccessMode;
 import ProxyDisconnectInfo = browser_api.ProxyDisconnectInfo;
+import * as nw from 'nw.gui';
 
 /**
  * desktop_browser_api.ts
@@ -30,8 +33,6 @@ export default class DesktopBrowserApi implements BrowserAPI {
     public hasInstalledThenLoggedIn = true;
     //  
     public supportsVpn = false;
-
-    // TODO: set the system VPN using the script generated before.
     private proxyAccessMode_ = ProxyAccessMode.VPN;
     
     // When we tried to create UI.
@@ -69,7 +70,6 @@ export default class DesktopBrowserApi implements BrowserAPI {
 
     public startUsingProxy = (endpoint: net.Endpoint, bypass: string[],
         opts: browser_api.ProxyConnectOptions) => {
-        // TODO: printout the endpoint.address.
         // opts can be inapp or vpn, for nwjs, the inital design of desktop app is
         // vpn
         MacProxy.startSettingProcess(endpoint.port, []);
@@ -84,8 +84,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
         if (url.indexOf(':') < 0) {
             url = chrome.extension.getURL(url);
         }
-        // TODO: add nw.gui typing definitions https://www.npmjs.com/package/@types/nw.gui
-        var browser_ = nw.Window.get();
+        var browser_ = nw.Window.get().window;
         browser_.location.href = url;
         // chrome.tabs.create({url: url}, (tab) => {
         //     chrome.windows.update(tab.windowId, {focused: true});

@@ -14,6 +14,7 @@
     "node": "*"
   },
   "dependencies": {
+    "@types/nw.gui": "0.0.20",
     "freedom": "^0.6.36",
     "freedom-for-chrome": "^0.4.28",
     "freedom-pgp-e2e": "^0.6.2",

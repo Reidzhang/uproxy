@@ -97,5 +97,8 @@
     "setup-freedom-port-control": "mkdir -p build/third_party/freedom-port-control && cp -r node_modules/freedom-port-control/dist build/third_party/freedom-port-control/",
     "test": "grunt test",
     "jpm": "jpm"
+  },
+  "dependencies": {
+    "@types/nw.gui": "0.0.20"
   }
 }
