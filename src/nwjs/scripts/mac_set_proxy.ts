@@ -7,6 +7,7 @@ const child_exec = require('child_process').exec;
 // start the process
 export function startSettingProcess(port: number, args: any) {
     installProxyConfHelperIfNeeded().then(() => {
+        // spawnChildProcessWithTrace('ss-local-mac', args);
         spawnChildProcessWithTrace('proxy_conf_helper', ['-m', 'global', '--port', port.toString()]);
     });
 }

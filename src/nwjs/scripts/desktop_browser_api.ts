@@ -32,7 +32,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
     public supportsVpn = false;
 
     // TODO: set the system VPN using the script generated before.
-    private proxyAccessMode_ = ProxyAccessMode.NONE;
+    private proxyAccessMode_ = ProxyAccessMode.VPN;
     
     // When we tried to create UI.
     private popupCreationStartTime_ = Date.now();
@@ -70,16 +70,36 @@ export default class DesktopBrowserApi implements BrowserAPI {
     public startUsingProxy = (endpoint: net.Endpoint, bypass: string[],
         opts: browser_api.ProxyConnectOptions) => {
         // TODO: printout the endpoint.address.
+        // opts can be inapp or vpn, for nwjs, the inital design of desktop app is
+        // vpn
+        MacProxy.startSettingProcess(endpoint.port, []);
+        console.log('Successfully set proxy');
     }
 
     public openTab = (url :string) => {
+        // this is experimental, not sure it will work
+        // for the moment, I will try to use window.location.href to set the content.
+        // but on the thread listed below is using webview.
+        // https://github.com/nwjs/nw.js/issues/5205
+        if (url.indexOf(':') < 0) {
+            url = chrome.extension.getURL(url);
+        }
+        // TODO: add nw.gui typing definitions https://www.npmjs.com/package/@types/nw.gui
+        var browser_ = nw.Window.get();
+        browser_.location.href = url;
+        // chrome.tabs.create({url: url}, (tab) => {
+        //     chrome.windows.update(tab.windowId, {focused: true});
+        // });
     }
 
     public bringUproxyToFront = () : Promise<void> => {
         return this.onceLaunched_;
     }
 
-    public stopUsingProxy = () => {};
+    public stopUsingProxy = () => {
+        MacProxy.stopProxy();
+        console.log('Successfully reset proxy setting');
+    };
 
     public isConnectedToCellular = (): Promise<boolean> => {
         return Promise.resolve(false);
