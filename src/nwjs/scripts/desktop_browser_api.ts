@@ -46,6 +46,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
     
     // storing a reference to the main window
     private browser_ : Window = null;
+
     private onceLaunched_ :Promise<void>;
     public handlePopupLaunch :() => void; 
 
@@ -92,7 +93,17 @@ export default class DesktopBrowserApi implements BrowserAPI {
     }
 
     public bringUproxyToFront = () : Promise<void> => {
-        return this.onceLaunched_;
+        if (this.popupState_ === PopupState.NOT_LAUNCHED) {
+            this.popupState_ = PopupState.LAUNCHED;
+            // Is this Fullfill and Reject ?
+            this.onceLaunched_ = new Promise<void>((F, R) => {
+                this.handlePopupLaunch = F;
+            });
+            return this.onceLaunched_;
+        } else {
+            console.log('Waiting for mainwindow to launch...');
+            return this.onceLaunched_;   
+        }
     }
 
     public stopUsingProxy = () => {
