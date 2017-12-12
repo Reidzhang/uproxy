@@ -31,6 +31,7 @@
     "@types/lodash": "^4.14.37",
     "@types/ssh2": "0.0.31",
     "@types/xregexp": "^3.0.28",
+    "@types/nw.gui": "0.0.20",    
     "bower": "^1.4.1",
     "cca": "^0.8.0",
     "circular-json": "^0.3.0",
