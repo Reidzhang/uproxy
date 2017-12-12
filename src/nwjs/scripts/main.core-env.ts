@@ -8,15 +8,16 @@
  */
 
 // TODO: import freedom
- import DesktopBrowserApi from './desktop_browser_api';
+import '../freedom-for-chrome/freedom-for-chrome';
+import DesktopBrowserApi from './desktop_browser_api';
 
- import * as uproxy_core_api from '../../interfaces/uproxy_core_api';
+import * as uproxy_core_api from '../../interfaces/uproxy_core_api';
 
- declare const freedom: freedom.FreedomInCoreEnv;
+declare const freedom: freedom.FreedomInCoreEnv;
 
- export interface OnEmitModule extends freedom.OnAndEmit<any,any> {};
- export interface OnEmitModuleFactory extends
-   freedom.FreedomModuleFactoryManager<OnEmitModule> {};
+export interface OnEmitModule extends freedom.OnAndEmit<any,any> {};
+export interface OnEmitModuleFactory extends
+  freedom.FreedomModuleFactoryManager<OnEmitModule> {};
  
 // Remember which handlers freedom has installed.
 var haveAppChannel :Function;
@@ -28,7 +29,13 @@ export var uProxyAppChannel :Promise<freedom.OnAndEmit<any,any>> =
 export var moduleName = 'uProxy App Top Level';
 export var browserApi :DesktopBrowserApi = new DesktopBrowserApi();
 
-// TODO: invoke browser_api to install bring proxy to front handler
+console.log('Instantiating UI');
+// This instantiation, before the core has even started, should reduce the
+// apparent startup time, but runs the risk of leaving the UI non-responsive
+// until the core catches up.
+browserApi.bringUproxyToFront().then(() => {
+  console.log('UI instantiation complete');
+});
 
 console.log('Loading core');
 freedom('generic_core/freedom-module.json', <freedom.FreedomInCoreEnvOptions>{
