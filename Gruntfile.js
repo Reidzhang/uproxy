@@ -32,10 +32,10 @@ module.exports = function(grunt) {
   const chromeAppDevPath = path.join(devBuildPath, 'chrome/app/');
   const firefoxDevPath = path.join(devBuildPath, 'firefox/');
   const ccaDevPath = path.join(devBuildPath, 'cca/');
+  const nwjsDevPath = path.join(devBuildPath, 'nwjs/')  
   const androidDevPath = path.join(devBuildPath, 'android/');
   const genericPath = path.join(devBuildPath, 'generic/');
   const nwjsDevPath = path.join(devBuildPath, 'nwjs/');
-
 //-------------------------------------------------------------------------
   function browserifyIntegrationTest(path) {
     return Rule.browserifySpec(path, {
@@ -1105,19 +1105,6 @@ module.exports = function(grunt) {
   });
 
   // =========================================================================
-  // NWJS
-  // =========================================================================
-  registerTask(grunt, 'build_nwjs', [
-    'copy:resources',
-    'copy:devGenericCore',
-    'compileTypescript',
-    'browserify:genericCoreFreedomModule',
-    'browserify:loggingProvider',
-    'browserify:churnPipeFreedomModule',
-    'browserify:cloudSocialProviderFreedomModule'
-  ]);
-  
-  // =========================================================================
   // Android
   // =========================================================================
 
@@ -1168,6 +1155,56 @@ module.exports = function(grunt) {
     'android_debug',
     'exec:ccaEmulateAndroid'
   ]);
+
+  // =========================================================================
+  // NWJS
+  // =========================================================================
+  registerTask(grunt, 'build_nwjs', [
+    'base',
+    'nwjsMainCoreEnv',
+    'nwjsContext',
+    'nwjsRoot',
+    'copy:nwjs',
+    'copy:nwjs_additional',
+  ]);
+  
+  registerTask(grunt, 'nwjsMainCoreEnv',
+      'Builds build/src/nwjs/scripts/main.core-env.static.js',[
+    'compileTypescript',
+    'browserify:nwjsMainCoreEnv'
+  ]);
+
+  registerTask(grunt, 'nwjsContext', 
+      'Builds build/src/nwjs/scripts/context.static.js', [
+    'compileTypescript',
+    'browserify:nwjsContext'
+  ]);
+
+  registerTask(grunt, 'nwjsRoot', 
+      'Builds build/src/nwjs/generic_ui/polymer/vulcanized.{html,static.js}',[
+    'compileTypescript',
+    'copy:resources',
+    'copy:nwjs',
+    'copy:nwjsAdditional',
+  ].concat(fullyVulcanize('nwjs/generic_ui/polymer','root','vulcanized', true)));
+
+  grunt.config.merge({
+    browserify: {
+      nwjsMainCoreEnv: Rule.browserify('nwjs/scripts/main.core-env', {
+        browserifyOptions: {
+          standalone: 'ui_context'
+        }
+      }),
+      nwjsContext: Rule.browserify('nwjs/scripts/context', {
+        browserifyOptions: {
+          standalone: 'ui_context'
+        }
+      }),
+    },
+    copy: {
+
+    }
+  });
 
   // =========================================================================
   // Tests
