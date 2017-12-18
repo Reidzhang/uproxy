@@ -1,5 +1,3 @@
-/// <reference path= '../../../third_party/nwjs/index.d.ts' />
-
 import * as browser_api from "../../interfaces/browser_api";
 import BrowserAPI = browser_api.BrowserAPI;
 import * as net from '../../lib/net/net.types';
@@ -25,6 +23,9 @@ enum PopupState {
     LAUNCHING,
     LAUNCHED
 }
+
+declare var Notification : any; //TODO remove this
+declare var window : any;
 
 export default class DesktopBrowserApi implements BrowserAPI {
     public browserSpecificElement = '';
@@ -85,7 +86,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
         if (url.indexOf(':') < 0) {
             url = chrome.extension.getURL(url);
         }
-        var browser_ = nw.Window.get().window;
+        var browser_ = window;
         browser_.location.href = url;
         // chrome.tabs.create({url: url}, (tab) => {
         //     chrome.windows.update(tab.windowId, {focused: true});

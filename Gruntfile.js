@@ -35,7 +35,6 @@ module.exports = function(grunt) {
   const nwjsDevPath = path.join(devBuildPath, 'nwjs/')  
   const androidDevPath = path.join(devBuildPath, 'android/');
   const genericPath = path.join(devBuildPath, 'generic/');
-  const nwjsDevPath = path.join(devBuildPath, 'nwjs/');
 //-------------------------------------------------------------------------
   function browserifyIntegrationTest(path) {
     return Rule.browserifySpec(path, {
@@ -1165,7 +1164,7 @@ module.exports = function(grunt) {
     'nwjsContext',
     'nwjsRoot',
     'copy:nwjs',
-    'copy:nwjs_additional',
+    'copy:nwjsAdditional',
   ]);
   
   registerTask(grunt, 'nwjsMainCoreEnv',
@@ -1202,8 +1201,41 @@ module.exports = function(grunt) {
       }),
     },
     copy: {
-
-    }
+      nwjs: Rule.copyLibs({
+        npmLibNames: ['freedom-for-chrome', 'forge-min'],
+        pathsFromDevBuild: [
+          'generic_core',
+          'generic_ui',
+          'interfaces',
+          'icons',
+          'fonts'
+        ].concat(backendFreedomModulePaths),
+        pathsFromThirdPartyBuild: backendThirdPartyBuildPaths,
+        files: getExtraFilesForCoreBuild(nwjsDevPath).concat({
+          expand: true,
+          cws: 'src/',
+          src: ['icons/128_online.png', 'fonts/*'],
+          dest: nwjsDevPath
+        }),
+        localDestPath: 'nwjs/'
+      }),
+      nwjsAdditional: {
+        files: [
+          { // Copy chrome extension panel 
+            expand: true,
+            cwd: nwjsDevPath,
+            src: ['polymer/*', 'scripts/*', 'fonts/*'],
+            dest: nwjsDevPath + '/generic_ui'
+          },
+          { // Copy generic files used by core and UI
+              expand: true,
+              cwd: genericPath,
+              src: ['*.js'],
+              dest: nwjsDevPath + '/generic'
+          }
+        ]
+      },
+    },
   });
 
   // =========================================================================

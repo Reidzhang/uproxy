@@ -42,6 +42,10 @@
   version "6.0.45"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.45.tgz#c4842a9d653d767831e4ff495b6008cc0d579966"
 
+"@types/nw.gui@0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@types/nw.gui/-/nw.gui-0.0.20.tgz#b690fbbb501404662737db85d595fdebefba6f98"
+
 "@types/ssh2@0.0.31":
   version "0.0.31"
   resolved "https://registry.yarnpkg.com/@types/ssh2/-/ssh2-0.0.31.tgz#4df48cc09080558bcd119d30b4b2b4765611a43a"
