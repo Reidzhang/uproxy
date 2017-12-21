@@ -1213,7 +1213,7 @@ module.exports = function(grunt) {
         pathsFromThirdPartyBuild: backendThirdPartyBuildPaths,
         files: getExtraFilesForCoreBuild(nwjsDevPath).concat({
           expand: true,
-          cws: 'src/',
+          cwd: 'src/',
           src: ['icons/128_online.png', 'fonts/*'],
           dest: nwjsDevPath
         }),

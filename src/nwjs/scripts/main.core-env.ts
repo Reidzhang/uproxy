@@ -8,7 +8,7 @@
  */
 
 // TODO: import freedom
-import 'freedom-for-chrome/freedom-for-chrome';
+// import 'freedom-for-chrome/freedom-for-chrome';
 import DesktopBrowserApi from './desktop_browser_api';
 
 import * as uproxy_core_api from '../../interfaces/uproxy_core_api';

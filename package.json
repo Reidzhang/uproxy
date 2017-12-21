@@ -86,7 +86,8 @@
     "typescript": "^2.0.3",
     "uparams": "^1.2.0",
     "uproxy-cloud-install": "^1.0.21",
-    "xregexp": "^2.0.0"
+    "xregexp": "^2.0.0",
+    "sudo-prompt": "^7.1.0"
   },
   "scripts": {
     "grunt": "grunt",

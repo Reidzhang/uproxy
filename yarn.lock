@@ -5040,6 +5040,10 @@ subarg@^1.0.0:
   dependencies:
     minimist "^1.1.0"
 
+sudo-prompt@^7.1.0:
+  version "7.1.1"
+  resolved "https://registry.yarnpkg.com/sudo-prompt/-/sudo-prompt-7.1.1.tgz#3e1e025920b085dfc0d072193cca2867fa9c51b2"
+
 supports-color@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-0.2.0.tgz#d92de2694eb3f67323973d7ae3d8b55b4c22190a"
