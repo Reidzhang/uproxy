@@ -33,7 +33,7 @@ function spawnChildProcessWithTrace(fileName: string, args: string[]) {
   }
 
 function getBinaryPath(file: string): string {
-return path.join(__dirname, 'binaries/' + file);
+    return path.join(__dirname, 'binaries/' + file);
 }
 
 function runUnixCommand(command: string, args: string[], env: Object): Promise<string> {
