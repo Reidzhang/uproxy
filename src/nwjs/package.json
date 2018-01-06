@@ -3,7 +3,7 @@
   "version": "1.0",
   "chromium-args": "--enable-features=NativeNotifications",
   "main": "/generic_ui/index.html",
-  "bg-script": "/scripts/main.core-env.static.js",
+  "bg-script": "/scripts/main.js",
   "window": {
     "show": true
   },
