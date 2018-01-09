@@ -1229,7 +1229,7 @@ module.exports = function(grunt) {
           { // Copy chrome extension panel 
             expand: true,
             cwd: nwjsDevPath,
-            src: ['polymer/*', 'scripts/*', 'fonts/*'],
+            src: ['polymer/*', 'scripts/*', 'fonts/*', 'icons/*'],
             dest: nwjsDevPath + '/generic_ui'
           },
           { // Copy generic files used by core and UI
