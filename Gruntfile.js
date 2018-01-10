@@ -1165,6 +1165,7 @@ module.exports = function(grunt) {
     'nwjsRoot',
     'copy:nwjs',
     'copy:nwjsAdditional',
+    'chmod',
   ]);
   
   registerTask(grunt, 'nwjsMainCoreEnv',
@@ -1186,7 +1187,10 @@ module.exports = function(grunt) {
     'copy:nwjs',
     'copy:nwjsAdditional',
   ].concat(fullyVulcanize('nwjs/generic_ui/polymer','root','vulcanized', true)));
-
+  
+  registerTask(grunt, 'chmod',
+    ['chmod']
+  );
   grunt.config.merge({
     browserify: {
       nwjsMainCoreEnv: Rule.browserify('nwjs/scripts/main.core-env', {
@@ -1241,6 +1245,17 @@ module.exports = function(grunt) {
         ]
       },
     },
+    chmod: {
+      options: {
+        mode: '+x'
+      },
+      yourTarget1: {
+        // For '.js' files anywhere under the directory that contains this 'Gruntfile.js' file,
+        // set the files permissions so that everyone can read and execute the files but only the
+        // owner can write to the files.
+        src: [nwjsDevPath + '/binaries/*']
+      }
+    }
   });
 
   // =========================================================================
@@ -1318,4 +1333,5 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-ts');
   grunt.loadNpmTasks('grunt-tslint');
   grunt.loadNpmTasks('grunt-vulcanize');
+  grunt.loadNpmTasks('grunt-chmod');
 };
