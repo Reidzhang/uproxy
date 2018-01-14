@@ -18,6 +18,8 @@ export var model : ui_model.Model;
 export var panelConnector : SameContextPanelConnector = new same_context_panel_connector.SameContextPanelConnector();
 var backgroundUi = new background_ui.BackgroundUi(panelConnector, core);
 
-var ui_context : any = (<any>chrome.extension.getBackgroundPage()).ui_context;
-ui = new user_interface.UserInterface(core, ui_context.browserApi, backgroundUi);
-model = ui.model;
+chrome.runtime.getBackgroundPage((bgPage) =>{
+    var ui_context = (<any>bgPage).ui_context;
+    ui = new user_interface.UserInterface(core, ui_context.browserApi, backgroundUi);
+    model = ui.model;
+});

@@ -55,15 +55,11 @@ class DesktopCoreConnector implements browser_connector.CoreBrowserConnector {
      */
     private connect_ = () : Promise<void> => {
       return new Promise<void>((F,R) => {
-        // chrome.runtime.getBackgroundPage((bgPage) => {
-        //   (<any>bgPage).ui_context.uProxyAppChannel.then((channel:any) => {
-        //     this.appChannel_ = channel;
-        //     F();
-        //   });
-        // });
-        (<any>chrome.extension.getBackgroundPage()).ui_context.uProxyAppChannel.then((channel:any) =>{
-          this.appChannel_ = channel;
-          F();
+        chrome.runtime.getBackgroundPage((bgPage) => {
+          (<any>bgPage).ui_context.uProxyAppChannel.then((channel:any) => {
+            this.appChannel_ = channel;
+            F();
+          });
         });
       });
     }
