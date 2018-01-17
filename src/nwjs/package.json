@@ -5,7 +5,9 @@
   "main": "/generic_ui/index.html",
   "bg-script": "/scripts/main.js",
   "window": {
-    "show": true
+    "show": true,
+    "width": 500,
+    "height": 800
   },
   "scripts": {
     "start": "nw ."
@@ -13,17 +15,21 @@
   "engines": {
     "node": "*"
   },
-  "dependencies": {
-    "@types/nw.gui": "0.0.20",
-    "freedom": "^0.6.36",
-    "freedom-for-chrome": "^0.4.28",
-    "freedom-pgp-e2e": "^0.6.2",
-    "freedom-port-control": "^0.9.0",
-    "freedom-social-firebase": "^2.0.0",
-    "freedom-social-github": "^0.1.3",
-    "freedom-social-quiver": "^0.1.5",
-    "freedom-social-wechat": "^0.1.5",
-    "freedom-xhr": "^0.0.11",
-    "freedomjs-anonymized-metrics": "^0.7.4"
+  "permissions": [
+    "identity",
+    "storage",
+    "http://*/",
+    "https://*/",
+    "notifications",
+    "proxy",
+    "system.network"
+  ],
+  "sockets": {
+    "tcp": { "connect" : "" },
+    "tcpServer": { "listen": "" },
+    "udp": { "send": "", "bind": "" }
+  },
+  "externally_connectable": {
+    "matches" : ["*://*.uproxy.org/*", "*://uproxysite.appspot.com/*", "*://test-dot-uproxysite.appspot.com/*", "*://beta-dot-uproxysite.appspot.com/*"]
   }
 }
