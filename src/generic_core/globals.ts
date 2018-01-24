@@ -64,9 +64,15 @@ export var loadSettings :Promise<void> =
 
       // Use the setting values loaded from storage unless the value was not
       // set in storage in which case we should use the default value.
+      console.log(exports.settings);
       _.merge(settings, settingsFromStorage, (a :Object, b :Object) => {
         if (_.isArray(a) && _.isArray(b)) {
           // arrays should be replaced instead of combined
+          // In nwjs, saw the problem that the inital list of stun server is empty (Reid)
+          // return b;
+          if (b.length === 0) {
+            return a;
+          }
           return b;
         }
 

@@ -86,11 +86,9 @@ export default class DesktopBrowserApi implements BrowserAPI {
         if (url.indexOf(':') < 0) {
             url = chrome.extension.getURL(url);
         }
-        var browser_ = window;
-        browser_.location.href = url;
-        // chrome.tabs.create({url: url}, (tab) => {
-        //     chrome.windows.update(tab.windowId, {focused: true});
-        // });
+        chrome.tabs.create({url: url}, (tab) => {
+            chrome.windows.update(tab.windowId, {focused: true});
+        });
     }
 
     public bringUproxyToFront = () : Promise<void> => {
@@ -140,7 +138,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
     private events_ :{[name :string] :Function} = {};
     
     public exit = () => {
-        // Not necessary for in-browser versions
+        nw.App.quit();
     }
     // Queue of any events emitted that don't have listeners yet.  This is needed
     // for the 'inviteUrlData' event, if the invite URL caused uProxy to open,
