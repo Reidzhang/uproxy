@@ -34,7 +34,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
     public hasInstalledThenLoggedIn = true;
     //  
     public supportsVpn = false;
-    private proxyAccessMode_ = ProxyAccessMode.VPN;
+    private proxyAccessMode_ = ProxyAccessMode.NONE;
     
     // When we tried to create UI.
     private popupCreationStartTime_ = Date.now();
@@ -59,6 +59,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
         
         // clear the system proxy setting if there is any
         MacProxy.stopProxy();
+        this.checkVpnSupport_();
     }
     
     public setIcon = (iconFile :string) : void => {
@@ -74,8 +75,64 @@ export default class DesktopBrowserApi implements BrowserAPI {
         opts: browser_api.ProxyConnectOptions) => {
         // opts can be inapp or vpn, for nwjs, the inital design of desktop app is
         // vpn
-        MacProxy.startSettingProcess(endpoint.port, []);
+        // MacProxy.startSettingProcess(endpoint.port, []);
         console.log('Successfully set proxy');
+        if (!chrome.proxy) {
+            console.log('No proxy setting support; ignoring start command');
+            return;
+        }
+    
+        if (!opts.accessMode || opts.accessMode === ProxyAccessMode.NONE) {
+            console.log('Cannot start proxying with unknown access mode.');
+            return;
+        }
+        this.proxyAccessMode_ = opts.accessMode;
+        console.log(this.proxyAccessMode_);
+        if (this.proxyAccessMode_ === ProxyAccessMode.IN_APP) {
+            this.startInAppProxy_(endpoint);
+        } else if (this.proxyAccessMode_ === ProxyAccessMode.VPN) {
+            // TODO: start vpn proxy. need to implement tun2socks
+            this.startVpnProxy_(endpoint);
+        }
+    }
+
+    private startInAppProxy_ = (endpoint: net.Endpoint) => {
+        chrome.proxy.settings.set({
+            scope: 'regular',
+            value: {
+                mode: 'fixed_servers',
+                rules: {
+                    singleProxy: {
+                    scheme: 'socks5',
+                    host: endpoint.address,
+                    port: endpoint.port
+                    }
+                }
+            }
+        }, (response:Object) => {
+            console.log('Set proxy response:', response);
+            // Open the in-app browser through the proxy.
+            this.openTab('https://news.google.com/');
+        });
+    }
+
+    private startVpnProxy_ = (endpoint: net.Endpoint) => {
+        // Todo, start vpn
+    }
+
+    private checkVpnSupport_ = () : void => {
+        if (window.tun2socks === undefined) {
+          // We only add the tun2socks plugins to Android.
+          // Other platforms should fail here.
+          this.supportsVpn = false;
+          return;
+        }
+        // tun2socks calls bindProcessToNetwork so that the application traffic
+        // bypasses the VPN in order to avoid a loop-back.
+        // This API requires Android version >= Marshmallow (6.0, API 23).
+        window.tun2socks.deviceSupportsPlugin().then((supportsVpn: boolean) => {
+          this.supportsVpn = supportsVpn;
+        });
     }
 
     public openTab = (url :string) => {
@@ -106,8 +163,17 @@ export default class DesktopBrowserApi implements BrowserAPI {
     }
 
     public stopUsingProxy = () => {
-        MacProxy.stopProxy();
-        console.log('Successfully reset proxy setting');
+        // MacProxy.stopProxy();
+        if (this.proxyAccessMode_ === ProxyAccessMode.IN_APP) {
+            chrome.proxy.settings.clear({scope: 'regular'}, () => {
+                console.log('Cleared proxy settings IN_APP mode');
+            });
+        } else if (this.proxyAccessMode_ === ProxyAccessMode.VPN) {
+            MacProxy.stopProxy();
+            console.log('Cleared proxy settings VPN mode');
+        } else {
+            console.error('Unexpected proxy access mode ', this.proxyAccessMode_);
+        }
     };
 
     public isConnectedToCellular = (): Promise<boolean> => {
