@@ -2,7 +2,7 @@ import * as browser_api from "../../interfaces/browser_api";
 import BrowserAPI = browser_api.BrowserAPI;
 import * as net from '../../lib/net/net.types';
 import * as Constants from '../../generic_ui/scripts/constants';
-import * as MacProxy from './mac_set_proxy';
+// import * as MacProxy from './mac_set_proxy';
 import ProxyAccessMode = browser_api.ProxyAccessMode;
 import ProxyDisconnectInfo = browser_api.ProxyDisconnectInfo;
 import * as nw from 'nw.gui';
@@ -58,7 +58,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
         });
         
         // clear the system proxy setting if there is any
-        MacProxy.stopProxy();
+        // MacProxy.stopProxy();
         this.checkVpnSupport_();
     }
     
@@ -87,6 +87,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
             return;
         }
         this.proxyAccessMode_ = opts.accessMode;
+        console.log("Starting Proxy Server");
         console.log(this.proxyAccessMode_);
         if (this.proxyAccessMode_ === ProxyAccessMode.IN_APP) {
             this.startInAppProxy_(endpoint);
@@ -169,7 +170,7 @@ export default class DesktopBrowserApi implements BrowserAPI {
                 console.log('Cleared proxy settings IN_APP mode');
             });
         } else if (this.proxyAccessMode_ === ProxyAccessMode.VPN) {
-            MacProxy.stopProxy();
+            // MacProxy.stopProxy();
             console.log('Cleared proxy settings VPN mode');
         } else {
             console.error('Unexpected proxy access mode ', this.proxyAccessMode_);

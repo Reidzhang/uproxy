@@ -1196,10 +1196,10 @@ module.exports = function(grunt) {
       nwjsMainCoreEnv: Rule.browserify('nwjs/scripts/main.core-env', {
         browserifyOptions: {
           ignoreMissing: true,
-          builtins: false,
-          commondir: false,
-          browserField: false,
-          detectGlobals: false,
+          // builtins: false,
+          // commondir: false,
+          // browserField: false,
+          // detectGlobals: false,
           standalone: 'ui_context'
         }
       }),
